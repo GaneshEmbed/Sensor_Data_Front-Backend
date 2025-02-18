@@ -1,3 +1,5 @@
+Here’s a step-by-step guideline for running your MERN stack project using Docker Compose.
+
 ---
 
 # **MERN Stack Project - Running with Docker Compose**
@@ -97,3 +99,5 @@ docker-compose down -v
 - Ensure Docker is running and ports 3000/5000 are not occupied by other processes.
 
 ---
+
+This guide should help you document the process in your **README.md**.
