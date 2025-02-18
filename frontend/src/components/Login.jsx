@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // Import useDispatch from Redux
-import { loginSuccess, loginFailure } from '../redux/reducers/authReducer'; // Import actions
+import { useDispatch } from 'react-redux';
+import { loginSuccess, loginFailure } from '../redux/reducers/authReducer';
 
 function Login() {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize dispatch
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,12 +19,9 @@ function Login() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, formData);
 
-      // Dispatch loginSuccess to store the tokens in Redux
       dispatch(loginSuccess({ accessToken: response.data.accessToken, refreshToken: response.data.refreshToken }));
-
-      // Save tokens to localStorage as well
       localStorage.setItem('token', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
 
@@ -33,7 +30,7 @@ function Login() {
     } catch (error) {
       setError('Login failed. Please check your credentials and try again.');
       console.error('Login failed:', error.response?.data?.error || error.message);
-      dispatch(loginFailure(error.response?.data?.error || error.message)); // Dispatch failure action if needed
+      dispatch(loginFailure(error.response?.data?.error || error.message));
     }
   };
 
@@ -44,16 +41,16 @@ function Login() {
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         <div className="mb-6">
-          <label htmlFor="username" className="block text-gray-600 font-medium mb-2">User Name</label>
+          <label htmlFor="username" className="block text-gray-600 font-medium mb-2">User Name or Email</label>
           <input
-            type="email"
+            type="text"  // ✅ Now allows usernames & emails
             id="username"
             name="username"
             value={formData.username}
             onChange={handleChange}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 hover:border-blue-400"
             required
-            placeholder="Enter your email"
+            placeholder="Enter your username or email"
           />
         </div>
 
@@ -72,10 +69,7 @@ function Login() {
         </div>
 
         <div className="flex justify-center mb-6">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-          >
+          <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105">
             Login
           </button>
         </div>

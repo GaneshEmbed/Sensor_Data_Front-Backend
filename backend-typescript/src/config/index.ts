@@ -5,10 +5,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // MongoDB URI for the primary database connection, defaults to a local development URI if not provided
-export const MONGO_URI_PRIMARY = process.env.MONGO_URI_PRIMARY || 'mongodb://localhost:27017/login';
+export const MONGO_URI_PRIMARY = process.env.MONGO_URI_PRIMARY || 'mongodb://mongo:27017/login';
 
 // MongoDB URI for the backup database connection, defaults to a local development URI if not provided
-export const MONGO_URI_BACKUP = process.env.MONGO_URI_BACKUP || 'mongodb://localhost:27017/backup';
+export const MONGO_URI_BACKUP = process.env.MONGO_URI_BACKUP || 'mongodb://mongo:27017/backup';
 
 // JWT secret used for encoding and signing JWT tokens, defaults to 'mysecret' if not specified
 export const JWT_SECRET = process.env.JWT_SECRET || 'mysecret';

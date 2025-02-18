@@ -27,7 +27,7 @@ function Register() {
       dispatch(resetError());
 
       // Send POST request to the server to register the user
-      await axios.post('http://localhost:5000/api/auth/register', formData);
+      await axios.post('http://13.233.204.86:5001/api/auth/register', formData);
       alert('Registration successful!'); // Notify the user
       window.location.href = '/login'; // Redirect to the login page
     } catch (error) {

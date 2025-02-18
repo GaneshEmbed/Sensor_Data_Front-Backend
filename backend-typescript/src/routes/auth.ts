@@ -1,27 +1,53 @@
-// Import necessary modules from Express
-import { Router } from 'express'; // Importing Router to define API routes
+import { Router, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-// Import authentication-related controllers
-import { register, login, refreshToken } from '../controllers/authController';
+const router = Router();
 
-// Import user profile-related controllers
-import { getMe, updateUser } from '../controllers/userController';
+// ✅ Load JWT Secret from Environment
+const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
 
-const router = Router(); // Create an instance of Router to define and manage API endpoints
+// ✅ TypeScript Interfaces
+interface RegisterRequestBody {
+  username: string;
+  password: string;
+}
 
-/** 
- * Authentication Routes 
- * These routes handle user authentication-related actions.
- */
-router.post('/register', register);     // Register a new user
-router.post('/login', login);           // Authenticate a user and issue a token
-router.post('/refresh', refreshToken);  // Refresh the access token
+interface LoginRequestBody {
+  username: string;
+  password: string;
+}
 
-/** 
- * User Profile Routes 
- * These routes manage user profile retrieval and updates.
- */
-router.get('/me', getMe);               // Fetch the current authenticated user's profile
-router.put('/update', updateUser);      // Update the user profile
+// ✅ Health Check Route (API Test)
+router.get('/test', (req: Request, res: Response): void => {
+  res.json({ message: '✅ Auth Route Working' });
+});
 
-export default router; // Export the router for use in the main application
+// ✅ Registration Route (Mock Implementation)
+router.post('/register', (req: Request, res: Response): void => {
+  const body = req.body as RegisterRequestBody;
+
+  if (!body.username || !body.password) {
+    res.status(400).json({ error: 'Username and password are required' });
+    return;
+  }
+
+  // In a real-world app, save the user to the database
+  res.status(201).json({ message: `User ${body.username} registered successfully!` });
+});
+
+// ✅ Login Route (With JWT Token)
+router.post('/login', (req: Request, res: Response): void => {
+  const { username, password } = req.body as LoginRequestBody;
+
+  // Simulated authentication check (Replace with DB validation)
+  if (username === "testuser" && password === "pass123") {
+    // Generate JWT Token
+    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
+
+    res.json({ message: "User logged in successfully!", token });
+  } else {
+    res.status(401).json({ error: "Invalid credentials" });
+  }
+});
+
+export default router;
